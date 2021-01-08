@@ -3,7 +3,12 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:transmogrifier="http://namespaces.plone.org/transmogrifier"
     i18n_domain="rohberg.joomlamigration">
+
+  <include package="collective.transmogrifier" file="meta.zcml" />
+  <include package="collective.transmogrifier" />
+  <include package="plone.app.transmogrifier" />
 
   <i18n:registerTranslations directory="locales" />
 
@@ -41,5 +46,16 @@
       />
 
   <!-- -*- extra stuff goes here -*- -->
+
+  <transmogrifier:registerConfig
+      name="rohbergJoomlamigrationJoomlaMySQL"
+      title="Migration configuration for querying Joomla MySQL DB"
+      configuration="pipelines/joomlamysql.cfg"
+      />
+  <transmogrifier:registerConfig
+      name="rohbergJoomlamigrationExampleJsonsource"
+      title="Migration configuration for example json data"
+      configuration="pipelines/example-jsonsource.cfg"
+      />
 
 </configure>
