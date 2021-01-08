@@ -28,7 +28,7 @@
 rohberg.joomlamigration
 =======================
 
-Tell me what your product does
+Migrate Joomla to Plone
 
 Features
 --------
@@ -71,6 +71,14 @@ Install rohberg.joomlamigration by adding it to your buildout::
 
 
 and then running ``bin/buildout``
+
+
+Usage
+-----
+
+Go to folder, click 'Import' and select pipeline.
+
+See Plone log for more info.
 
 
 Contribute
