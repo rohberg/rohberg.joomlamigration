@@ -45,7 +45,7 @@ setup(
     package_dir={'': 'src'},
     include_package_data=True,
     zip_safe=False,
-    python_requires="==2.7, >=3.6",
+    python_requires=">=3.7",
     install_requires=[
         'setuptools',
         # -*- Extra requirements: -*-
@@ -53,6 +53,11 @@ setup(
         'plone.api>=1.8.4',
         'plone.restapi',
         'plone.app.dexterity',
+        'mr.migrator',
+        'collective.transmogrifier>=1.5',
+        'plone.app.transmogrifier',
+        'transmogrify.sqlalchemy',
+        'transmogrify.dexterity',
     ],
     extras_require={
         'test': [
@@ -68,7 +73,12 @@ setup(
     entry_points="""
     [z3c.autoinclude.plugin]
     target = plone
+
     [console_scripts]
     update_locale = rohberg.joomlamigration.locales.update:update_locale
+    migrate = mr.migrator.runner:runner
     """,
 )
+
+
+# target = transmogrify
