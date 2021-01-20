@@ -52,6 +52,7 @@
       title="Migration configuration for querying Joomla MySQL DB"
       configuration="pipelines/joomlamysql.cfg"
       />
+ 
   <transmogrifier:registerConfig
       name="rohbergJoomlamigrationExampleJsonsource"
       title="Migration configuration for example json data"
