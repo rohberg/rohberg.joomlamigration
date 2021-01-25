@@ -60,4 +60,9 @@
       configuration="pipelines/example-jsonsource.cfg"
       />
 
+  <utility
+      component=".blueprints.createLinkedImages.CreateLinkedImages"
+      name="rohberg.joomlamigration.createlinkedimages"
+      />
+
 </configure>
