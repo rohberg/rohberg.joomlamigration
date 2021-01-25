@@ -10,7 +10,7 @@
 - go for it!
 
 
-![run joomlatoplone pipeline](https://raw.githubusercontent.com/rohberg/rohberg.joomlamigration/master/public/runpipeline.pngg)
+![run joomlatoplone pipeline](https://raw.githubusercontent.com/rohberg/rohberg.joomlamigration/master/public/runpipeline.png)
 
 
 See more infos about how to use and customize migration with Mr.Migrator on 
