@@ -61,7 +61,7 @@
       />
 
   <utility
-      component=".blueprints.createLinkedImages.CreateLinkedImages"
+      component=".blueprints.imageFetcher.CreateLinkedImages"
       name="rohberg.joomlamigration.createlinkedimages"
       />
 

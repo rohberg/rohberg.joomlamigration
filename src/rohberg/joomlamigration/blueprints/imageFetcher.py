@@ -7,11 +7,16 @@ from zope.interface import provider
 from zope.interface import implementer
 
 import logging
+import re
+import six
 
 
 logger = logging.getLogger('rohberg.joomlamigration.createimages')
 
 class LinkedImageConversionParser(ResolveUIDAndCaptionFilter):
+    """
+    Eventuell plone.outputfilters_captioned_image überschreiben: snippet für images
+    """
 
     def __init__(self, target='images'):
         ResolveUIDAndCaptionFilter.__init__(self)
@@ -25,33 +30,23 @@ class LinkedImageConversionParser(ResolveUIDAndCaptionFilter):
         # TODO safe_unicode?
         soup = BeautifulSoup(data, 'html.parser')
 
-        # for elem in soup.find_all('img'):
-        #     attributes = elem.attrs
-        #     src = attributes.get('src', '')
-        #     image, fullimage, src, description = self.resolve_image(src)
-        #     attributes["src"] = src
-
-        #     if fullimage is not None:
-        #         # Check to see if the alt / title tags need setting
-        #         title = safe_unicode(aq_acquire(fullimage, 'Title')())
-        #         if not attributes.get('alt'):
-        #             # XXX alt attribute contains *alternate* text
-        #             attributes['alt'] = description or title
-        #         if 'title' not in attributes:
-        #             attributes['title'] = title
-
-        #     caption = description
-        #     # Check if the image needs to be captioned
-        #     if (
-        #         self.captioned_images and
-        #         image is not None and
-        #         caption and
-        #         'captioned' in attributes.get('class', [])
-        #     ):
-        #         self.handle_captioned_image(
-        #             attributes, image, fullimage, elem, caption)
-        # return six.text_type(soup)
-        return data
+        for elem in soup.find_all('img'):
+            attributes = elem.attrs
+            src = attributes.get('src', '')
+            title = attributes.get('title', '')
+            alt = attributes.get('alt', '')
+            logger.debug("found image node src: {} {} {}".format(src, title, alt))
+            if src.startswith("image/"):
+                logger.debug("do handle_captioned_image")
+                image = None
+                # todo create image
+                if image:
+                    self.items.append(image)
+                # todo replace image snippet
+            else:
+                logger.debug("src found not starting with image/")
+        return six.text_type(soup)
+        # return data
 
 
 @provider(ISectionBlueprint)
@@ -81,7 +76,7 @@ class CreateLinkedImages(object):
                 images = []
                 logger.info('** find images in {}'.format(item['_path']))
                 logger.info(item[self.textsource])
-                import pdb; pdb.set_trace()
+                # import pdb; pdb.set_trace()
                 try:
                     item[self.textsource] = parser(text)
                     images = parser.items # sind das die gefundenen images?
