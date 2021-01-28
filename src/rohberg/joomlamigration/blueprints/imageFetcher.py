@@ -25,28 +25,11 @@ def createImage(src):
     image = None
     url = src
     filename = url.split("/")[-1]
-    r = requests.get(url, timeout=0.5)
-
+    r = requests.get(url, timeout=3.0)
     if r.status_code == 200:
-        # image = NamedImage(r.content, filename=filename)
         image = r.content
-        # with open("/Users/ksuess/Desktop/_temp/joom/" + filename, 'wb') as f:
-        #     f.write(r.content)
     else:
-        logger.warn("couldn't fetch image")
-            
-    # res = safe_urlopen(src)
-    # if res is not None:
-    #     mimetype = res.info()['content-type']
-
-    # if res is not None:
-    #     scheme, host, path, query, frag = urlsplit(src)
-    #     filename = path.split('/')[-1]
-    #     # Zope ids need to be ASCII
-    #     filename = unquote_plus(filename).decode('utf8').encode('ascii', 'ignore')
-    #     # wrap the data so it'll get added with the correct filename & mimetype
-    #     data = File(filename, 'image', StringIO(res.read()), mimetype)
-
+        logger.warn("couldn't fetch image with src: {}".format(src))
     return image
 
 
@@ -73,7 +56,14 @@ class LinkedImageConversionParser(ResolveUIDAndCaptionFilter):
             src = attributes.get('src', '')
             title = attributes.get('title', '')
             alt = attributes.get('alt', '')
-            logger.info("found image node src: {}|{}|{}".format(src, title, alt))
+
+            if attributes.get('height', None):
+                del attributes['height']
+            if attributes.get('width', None):
+                del attributes['width']
+            if attributes.get('style', None):
+                del attributes['style']
+            # logger.info("found image node src: {}|{}|{}".format(src, title, alt))
             # import pdb; pdb.set_trace()
             if src.startswith("images/"):
                 # logger.info("do handle_captioned_image")
@@ -83,9 +73,10 @@ class LinkedImageConversionParser(ResolveUIDAndCaptionFilter):
                 # stuff imagedata in additonal pipeline item as data
                 imagedata = createImage(self.sourcedomain + '/' + src)
                 if imagedata:
+                    imagepath = self.target + "/" + imageid
                     image = {
                         # '_path': image.absolute_url(),
-                        '_path': self.target + "/" + imageid,
+                        '_path': imagepath,
                         '_type': 'Image',
                         'image': {
                             'filename': imageid,
@@ -94,7 +85,11 @@ class LinkedImageConversionParser(ResolveUIDAndCaptionFilter):
                         }
                         }
                     self.items.append(image)
-                # TODO replace image snippet
+                    # TODO replace image snippet
+                    # import pdb; pdb.set_trace()
+                    # Prepend '/' and add scale info to src
+                    elem['src'] = "/" + imagepath + "/@@images/image/medium"
+                    elem['class'] = "image-right"
             else:
                 logger.warn("src found not starting with images/ src: {}".format(src))
         return six.text_type(soup)
@@ -140,10 +135,10 @@ class CreateLinkedImages(object):
                     logger.error('AttributeError')
                     import pdb; pdb.set_trace()
                     yield item
-                if images:
-                    logger.info('!! found images {}'.format(images))
-                else:
-                    logger.info('no images found for {}'.format(item['_path']))
+                # if images:
+                #     logger.info('!! found images {}'.format(images))
+                # else:
+                #     logger.info('no images found for {}'.format(item['_path']))
 
             yield item
 
